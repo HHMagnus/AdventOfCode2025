@@ -18,11 +18,11 @@ where PF: Fn(&str) -> P,
     }
     let input = input.unwrap();
     let parsed = parse(&input);
-    run_part(day, part1, "1", parsed.clone());
-    run_part(day, part2, "2", parsed);
+    let part1_result = run_part(day, part1, "1", parsed.clone());
+    let part2_result = run_part(day, part2, "2", parsed);
 }
 
-fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P)
+fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P) -> R
 where
     F: Fn(P) -> R,
     R: Display
@@ -30,6 +30,7 @@ where
     let title = format!("Day {} part {}", day, part);
     let result = solver(input);
     println!("{}: {}", title, result);
+    result
 }
 
 fn get_input(day: PuzzleDay) -> Option<String> {
