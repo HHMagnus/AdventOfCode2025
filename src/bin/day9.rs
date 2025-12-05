@@ -3,7 +3,7 @@ use AdventOfCode2025::solve;
 type Parsed = Vec<usize>;
 
 fn main() {
-    solve(6, parse, part1, part2);
+    solve(9, parse, part1, part2);
 }
 
 fn parse(file: &str) -> Parsed {
