@@ -1,31 +1,9 @@
-
-use aoc_client::{AocClient, AocResult};
 use AdventOfCode2025::solve;
 
 type Parsed = Vec<(bool, i32)>;
 
 fn main() {
     solve(1, parse, part1, part2);
-}
-
-fn main2() -> AocResult<()> {
-    let client = AocClient::builder()
-        .session_cookie_from_default_locations()?
-        .year(2025)?
-        .day(1)?
-        .build()?;
-
-    let input: String = client.get_input()?;
-
-    let answer_part1 = 1;//part1(&input.clone());
-    let part1 = client.submit_answer(1, answer_part1)?;
-    println!("{:?}", part1);
-
-    let answer_part2 = 1;//part2(&input.clone());
-    let part2 = client.submit_answer(2, answer_part2)?;
-    println!("{:?}", part2);
-
-    Ok(())
 }
 
 fn parse(file: &str) -> Parsed {
