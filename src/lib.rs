@@ -1,4 +1,4 @@
-use aoc_client::{AocClient, PuzzleDay};
+use aoc_client::{AocClient, PuzzleDay, SubmissionOutcome};
 use std::fmt::Display;
 use std::fs::read_to_string;
 
@@ -19,7 +19,12 @@ where PF: Fn(&str) -> P,
     let input = input.unwrap();
     let parsed = parse(&input);
     let part1_result = run_part(day, part1, "1", parsed.clone());
-    submit_part1(&client, part1_result.to_string());
+    let outcome = submit_part1(&client, part1_result.to_string());
+    println!("Day {} part 1 submission: {:?}", day, outcome);
+    match outcome {
+        SubmissionOutcome::WrongLevel => {}
+        _ => return
+    };
     let part2_result = run_part(day, part2, "2", parsed);
     submit_part2(&client, part2_result.to_string());
 }
@@ -78,16 +83,16 @@ fn aoc_client(day: PuzzleDay) -> AocClient {
         .build().expect("Failed to build client")
 }
 
-fn submit_part1<R>(client: &AocClient, solution: R) where R: Display {
+fn submit_part1<R>(client: &AocClient, solution: R) -> SubmissionOutcome where R: Display {
     submit_part(client, "1", solution)
 }
 
-fn submit_part2<R>(client: &AocClient, solution: R) where R: Display {
+fn submit_part2<R>(client: &AocClient, solution: R) -> SubmissionOutcome where R: Display {
     submit_part(client, "2", solution)
 }
 
-fn submit_part<R>(client: &AocClient, part: &str, solution: R) where R: Display {
+fn submit_part<R>(client: &AocClient, part: &str, solution: R) -> SubmissionOutcome where R: Display {
     let outcome = client.submit_answer(part, solution)
         .expect("Failed to submit answer");
-    println!("Outcome: {:?}", outcome);
+    outcome
 }
