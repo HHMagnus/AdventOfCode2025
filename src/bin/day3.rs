@@ -1,13 +1,13 @@
 use AdventOfCode2025::solve;
 
+type Parsed = Vec<Vec<u64>>;
+
 fn main() {
-    solve(3, part1, part2);
+    solve(3, parse, part1, part2);
 }
 
-fn part1(input: &str) -> u64 {
-    let content = parse(input);
-
-    content.into_iter()
+fn part1(input: Parsed) -> u64 {
+    input.into_iter()
         .map(|line| {
             let mut vec = Vec::new();
             for i in 0..line.len()-1 {
@@ -19,16 +19,14 @@ fn part1(input: &str) -> u64 {
         }).sum()
 }
 
-fn parse(input: &str) -> Vec<Vec<u64>> {
+fn parse(input: &str) -> Parsed {
     input.lines().map(|line| {
         line.chars().map(|c| c.to_digit(10).unwrap() as u64).collect::<Vec<_>>()
     }).collect::<Vec<_>>()
 }
 
-fn part2(input: &str) -> u64 {
-    let content = parse(input);
-
-    content.into_iter()
+fn part2(input: Parsed) -> u64 {
+    input.into_iter()
         .map(|line| {
             let mut vec = Vec::new();
             let mut last = 0;
@@ -44,7 +42,6 @@ fn part2(input: &str) -> u64 {
                 res += line[i] * mul;
                 mul *= 10;
             }
-            println!("{}", res);
             res
         }).sum()
 }
