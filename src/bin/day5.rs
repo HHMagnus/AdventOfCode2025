@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use AdventOfCode2025::solve;
 
 type Parsed = (Vec<(usize, usize)>, Vec<usize>);
