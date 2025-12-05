@@ -1,11 +1,13 @@
 use std::collections::HashMap;
 use AdventOfCode2025::solve;
 
+type Parsed = HashMap<(i32, i32), Type>;
+
 fn main() {
-    solve(4, part1, part2);
+    solve(4, parse, part1, part2);
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 enum Type {
     Paper,
     Empty
@@ -21,10 +23,8 @@ impl Type {
     }
 }
 
-fn part1(input: &str) -> usize {
-    let matrix = parse(input);
-
-    let removable = find_removable(&matrix);
+fn part1(input: Parsed) -> usize {
+    let removable = find_removable(&input);
 
     removable.iter().count()
 }
@@ -57,24 +57,22 @@ fn find_removable(matrix: &HashMap<(i32, i32), Type>) -> Vec<(i32, i32)> {
     removable
 }
 
-fn parse(input: &str) -> HashMap<(i32, i32), Type> {
+fn parse(input: &str) -> Parsed {
     input.lines().enumerate().flat_map(|(y, line)| {
         line.chars().enumerate().map(move |(x, ch)| ((x as i32, y as i32), Type::new(ch)))
     }).collect::<HashMap<_, _>>()
 }
 
-fn part2(input: &str) -> usize {
-    let mut matrix = parse(input);
-
+fn part2(mut input: Parsed) -> usize {
     let mut total = 0;
 
     loop {
-        let removable = find_removable(&matrix);
+        let removable = find_removable(&input);
         if (removable.len() == 0) {
             break;
         }
         removable.iter().for_each(|xy| {
-            matrix.remove(xy);
+            input.remove(xy);
             total += 1;
         });
     }
