@@ -1,18 +1,19 @@
+use std::collections::HashMap;
 use AdventOfCode2025::solve;
 
+type Parsed = (Vec<(usize, usize)>, Vec<usize>);
+
 fn main() {
-    solve(5, part1, part2);
+    solve(5, parse, part1, part2);
 }
 
-fn part1(input: &str) -> usize {
-    let (ranges, nums) = parse(input);
-
+fn part1((ranges, nums): Parsed) -> usize {
     nums.into_iter()
         .filter(|num| ranges.iter().any(|(r1, r2)| r1 <= num && num <= r2))
         .count()
 }
 
-fn parse(input: &str) -> (Vec<(usize, usize)>, Vec<usize>) {
+fn parse(input: &str) -> Parsed {
     let mut split = input.split("\n\n");
     let ranges = split.next().unwrap()
         .lines().map(|line| {
@@ -27,9 +28,7 @@ fn parse(input: &str) -> (Vec<(usize, usize)>, Vec<usize>) {
     (ranges, nums)
 }
 
-fn part2(input: &str) -> usize {
-    let (mut ranges, nums) = parse(input);
-
+fn part2((mut ranges, _): Parsed) -> usize {
     ranges.sort();
 
     let mut total = 0;
