@@ -2,18 +2,12 @@ use std::fmt::Display;
 use std::fs::read_to_string;
 use aoc_client::{AocClient, AocResult, PuzzleDay};
 
-fn solve_part<F, R>(puzzle: String, file: &str, solver: F)
-where F: Fn(&str) -> R,
-      R: Display
-{
-    let result = solver(file);
-    println!("{}: {}", puzzle, result);
-}
-
-pub fn solve<F1, F2, R1, R2>(day: PuzzleDay, part1: F1, part2: F2)
-where F1: Fn(&str) -> R1,
+pub fn solve<PF, P, F1, F2, R1, R2>(day: PuzzleDay, parse: PF, part1: F1, part2: F2)
+where PF: Fn(&str) -> P,
+      P: Clone,
+      F1: Fn(P) -> R1,
       R1: Display,
-      F2: Fn(&str) -> R2,
+      F2: Fn(P) -> R2,
       R2: Display,
 {
     let title = format!("Day {}", day);
@@ -23,17 +17,19 @@ where F1: Fn(&str) -> R1,
         return;
     }
     let input = input.unwrap();
-    run_part(day, part1, "1", &input);
-    run_part(day, part2, "2", &input);
+    let parsed = parse(&input);
+    run_part(day, part1, "1", parsed.clone());
+    run_part(day, part2, "2", parsed);
 }
 
-fn run_part<F, R>(day: PuzzleDay, solver: F, part: &str, input: &str)
+fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P)
 where
-    F: Fn(&str) -> R,
+    F: Fn(P) -> R,
     R: Display
 {
     let title = format!("Day {} part {}", day, part);
-    solve_part(title, &input, solver);
+    let result = solver(input);
+    println!("{}: {}", title, result);
 }
 
 fn get_input(day: PuzzleDay) -> Option<String> {

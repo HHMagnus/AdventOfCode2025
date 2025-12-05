@@ -3,7 +3,7 @@ use aoc_client::{AocClient, AocResult};
 use AdventOfCode2025::solve;
 
 fn main() {
-    solve(1, part1, part2);
+    solve(1, parse, part1, part2);
 }
 
 fn main2() -> AocResult<()> {
@@ -15,20 +15,26 @@ fn main2() -> AocResult<()> {
 
     let input: String = client.get_input()?;
 
-    let answer_part1 = part1(&input.clone());
+    let answer_part1 = 1;//part1(&input.clone());
     let part1 = client.submit_answer(1, answer_part1)?;
     println!("{:?}", part1);
 
-    let answer_part2 = part2(&input.clone());
+    let answer_part2 = 1;//part2(&input.clone());
     let part2 = client.submit_answer(2, answer_part2)?;
     println!("{:?}", part2);
 
     Ok(())
 }
 
-fn part1(file: &str) -> i32 {
-    let input = parse(file);
+fn parse(file: &str) -> Vec<(bool, i32)> {
+    file.lines().map(|line| {
+        let left = line.starts_with('L');
+        let pos = line[1..].parse::<i32>().unwrap();
+        (left, pos)
+    }).collect::<Vec<_>>()
+}
 
+fn part1(input: Vec<(bool, i32)>) -> i32 {
     let mut clock = 50;
 
     let mut total = 0;
@@ -44,17 +50,7 @@ fn part1(file: &str) -> i32 {
     total
 }
 
-fn parse(file: &str) -> Vec<(bool, i32)> {
-    file.lines().map(|line| {
-        let left = line.starts_with('L');
-        let pos = line[1..].parse::<i32>().unwrap();
-        (left, pos)
-    }).collect::<Vec<_>>()
-}
-
-fn part2(file: &str) -> i32 {
-    let input = parse(file);
-
+fn part2(input: Vec<(bool, i32)>) -> i32 {
     let mut clock = 50;
 
     let mut total = 0;
