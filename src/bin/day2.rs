@@ -1,28 +1,13 @@
 use aoc_client::{AocClient, AocResult};
+use AdventOfCode2025::solve;
 
-fn main() -> AocResult<()> {
-    let client = AocClient::builder()
-        .session_cookie_from_default_locations()?
-        .year(2025)?
-        .day(2)?
-        .build()?;
+type Parsed = Vec<(i64, i64)>;
 
-    let input: String = client.get_input()?;
-
-    let answer_part1 = part1(input.clone());
-    let part1 = client.submit_answer(1, answer_part1)?;
-    println!("{:?}", part1);
-
-    let answer_part2 = part2(input.clone());
-    let part2 = client.submit_answer(2, answer_part2)?;
-    println!("{:?}", part2);
-
-    Ok(())
+fn main() {
+    solve(2, parse, part1, part2);
 }
 
-fn part1(file: String) -> String {
-    let input = parse(file);
-
+fn part1(input: Parsed) -> String {
     input.iter()
         .flat_map(|range| (range.0..range.1).into_iter())
         .filter(is_invalid_twice)
@@ -30,7 +15,7 @@ fn part1(file: String) -> String {
         .to_string()
 }
 
-fn parse(file: String) -> Vec<(i64, i64)> {
+fn parse(file: &str) -> Parsed {
     file.split_ascii_whitespace().next().unwrap().split(",").map(|range| {
         let mut split = range.split("-");
         (split.next().unwrap().parse::<i64>().unwrap(), split.next().unwrap().parse::<i64>().unwrap())
@@ -75,9 +60,7 @@ fn is_invalid_more(num: &i64) -> bool {
     false
 }
 
-fn part2(file: String) -> String {
-    let input = parse(file);
-
+fn part2(input: Parsed) -> String {
     input.iter()
         .flat_map(|range| (range.0..range.1).into_iter())
         .filter(is_invalid_more)
