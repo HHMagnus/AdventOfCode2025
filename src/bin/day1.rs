@@ -2,6 +2,8 @@
 use aoc_client::{AocClient, AocResult};
 use AdventOfCode2025::solve;
 
+type Parsed = Vec<(bool, i32)>;
+
 fn main() {
     solve(1, parse, part1, part2);
 }
@@ -26,7 +28,7 @@ fn main2() -> AocResult<()> {
     Ok(())
 }
 
-fn parse(file: &str) -> Vec<(bool, i32)> {
+fn parse(file: &str) -> Parsed {
     file.lines().map(|line| {
         let left = line.starts_with('L');
         let pos = line[1..].parse::<i32>().unwrap();
@@ -34,7 +36,7 @@ fn parse(file: &str) -> Vec<(bool, i32)> {
     }).collect::<Vec<_>>()
 }
 
-fn part1(input: Vec<(bool, i32)>) -> i32 {
+fn part1(input: Parsed) -> i32 {
     let mut clock = 50;
 
     let mut total = 0;
@@ -50,7 +52,7 @@ fn part1(input: Vec<(bool, i32)>) -> i32 {
     total
 }
 
-fn part2(input: Vec<(bool, i32)>) -> i32 {
+fn part2(input: Parsed) -> i32 {
     let mut clock = 50;
 
     let mut total = 0;
