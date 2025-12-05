@@ -1,4 +1,3 @@
-use aoc_client::{AocClient, AocResult};
 use AdventOfCode2025::solve;
 
 type Parsed = Vec<(i64, i64)>;
