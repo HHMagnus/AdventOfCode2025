@@ -18,21 +18,25 @@ where PF: Fn(&str) -> P,
     }
     let input = input.unwrap();
     let parsed = parse(&input);
-    let part1_result = run_part(day, part1, "1", parsed.clone());
-    let outcome = submit_part1(&client, part1_result.to_string());
-    println!("Day {} part 1 submission: {:?}", day, outcome);
+    if run_and_submit(day, part1, "1", &client, parsed.clone()) { return; }
+
+    run_and_submit(day, part2, "2", &client, parsed);
+}
+
+fn run_and_submit<P, F1, R1>(day: PuzzleDay, part_func: F1, part:  &str, client: &AocClient, parsed: P) -> bool
+where
+    P: Clone,
+    F1: Fn(P) -> R1,
+    R1: Display,
+{
+    let part1_result = run_part(day, part_func, part, parsed);
+    let outcome = submit_part(&client, part, part1_result.to_string());
+    println!("Day {} part {} submission: {:?}", day, part, outcome);
     match outcome {
         SubmissionOutcome::WrongLevel => {}
-        _ => return
+        _ => return true
     };
-    
-    let part2_result = run_part(day, part2, "2", parsed);
-    let outcome = submit_part2(&client, part2_result.to_string());
-    println!("Day {} part 2 submission: {:?}", day, outcome);
-    match outcome {
-        SubmissionOutcome::WrongLevel => {}
-        _ => return
-    };
+    false
 }
 
 fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P) -> R
@@ -87,14 +91,6 @@ fn aoc_client(day: PuzzleDay) -> AocClient {
         .year(2025).expect("Failed to get year")
         .day(day).expect("Failed to get day")
         .build().expect("Failed to build client")
-}
-
-fn submit_part1<R>(client: &AocClient, solution: R) -> SubmissionOutcome where R: Display {
-    submit_part(client, "1", solution)
-}
-
-fn submit_part2<R>(client: &AocClient, solution: R) -> SubmissionOutcome where R: Display {
-    submit_part(client, "2", solution)
 }
 
 fn submit_part<R>(client: &AocClient, part: &str, solution: R) -> SubmissionOutcome where R: Display {
