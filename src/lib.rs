@@ -25,8 +25,14 @@ where PF: Fn(&str) -> P,
         SubmissionOutcome::WrongLevel => {}
         _ => return
     };
+    
     let part2_result = run_part(day, part2, "2", parsed);
-    submit_part2(&client, part2_result.to_string());
+    let outcome = submit_part2(&client, part2_result.to_string());
+    println!("Day {} part 2 submission: {:?}", day, outcome);
+    match outcome {
+        SubmissionOutcome::WrongLevel => {}
+        _ => return
+    };
 }
 
 fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P) -> R
