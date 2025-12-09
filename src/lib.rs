@@ -30,13 +30,40 @@ where
     R1: Display,
 {
     let part1_result = run_part(day, part_func, part, parsed);
+    if is_solved(day, part) {
+        return false;
+    }
     let outcome = submit_part(&client, part, part1_result.to_string());
     println!("Day {} part {} submission: {:?}", day, part, outcome);
     match outcome {
-        SubmissionOutcome::WrongLevel => {}
-        _ => return true
-    };
-    false
+        SubmissionOutcome::WrongLevel => {
+            save_solved(day, part);
+            false
+        }
+        SubmissionOutcome::Correct => {
+            save_solved(day, part);
+            true
+        }
+        _ => true
+    }
+}
+
+fn solved_file(day: PuzzleDay, part: &str) -> String {
+    format!("input/solved/solved_{}_{}", day, part)
+}
+
+fn is_solved(day: PuzzleDay, part: &str) -> bool {
+    let file_name = solved_file(day, part);
+    std::fs::exists(file_name).expect("Expected to check if file exists")
+}
+
+fn save_solved(day: PuzzleDay, part: &str) {
+    let file_name = solved_file(day, part);
+
+    std::fs::create_dir_all("input/solved")
+        .expect("Failed to create dir");
+    std::fs::write(&file_name, "done")
+        .expect("Unable to write input file");
 }
 
 fn run_part<P, F, R>(day: PuzzleDay, solver: F, part: &str, input: P) -> R
