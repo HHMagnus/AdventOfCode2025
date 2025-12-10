@@ -1,3 +1,4 @@
+use good_lp::{highs, variable, variables, Expression, Solution, SolverModel};
 use std::collections::VecDeque;
 use AdventOfCode2025::solve;
 
@@ -80,6 +81,40 @@ fn part1(input: Parsed) -> usize {
         .sum()
 }
 
+impl Machine {
+    fn fewest_presses_to_joltage_requirement(&self) -> usize {
+        let mut problem_variables = variables!();
+        let mut list = self.joltage_requirements.iter()
+            .map(|_| Vec::new())
+            .collect::<Vec<_>>();
+        let variables = self.button_wiring.iter()
+            .map(|buttons| {
+                let variable = problem_variables.add(variable().min(0).integer());
+                for &b in buttons {
+                    list[b].push(variable);
+                }
+                variable
+            }).collect::<Vec<_>>();
+
+        let mut problem = highs(problem_variables.minimise(variables.iter().sum::<Expression>()));
+
+        for (i, vars) in list.into_iter().enumerate() {
+            let expression = vars.iter().sum::<Expression>();
+            let value = self.joltage_requirements[i];
+            problem.add_constraint(expression.eq(value as u32));
+        }
+
+        let solution = problem.solve().unwrap();
+
+        let values = variables.iter().map(|&x| solution.value(x).round() as usize)
+            .collect::<Vec<_>>();
+
+        values.iter().sum()
+    }
+}
+
 fn part2(input: Parsed) -> usize {
-    0
+    input.into_iter()
+        .map(|machine| machine.fewest_presses_to_joltage_requirement())
+        .sum()
 }

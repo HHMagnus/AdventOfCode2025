@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 aoc-client = "0.2.0"
 itertools = "0.14.0"
+good_lp = { version = "1.14.2", features = ["highs"], default-features = false }
